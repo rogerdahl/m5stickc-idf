@@ -13,7 +13,7 @@ ESP-IDF component to work with M5StickC. Works without including the Arduino fra
 
 ## Usage
 
-Clone repository in your *components* folder in your project and include *M5StickC.h* in your source code.
+Clone repository in your *components* folder in your project and include *m5stickc.h* in your source code.
 
 Call **m5stickc_init()** to initialize your M5StickC.
 

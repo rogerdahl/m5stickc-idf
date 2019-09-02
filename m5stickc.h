@@ -1,14 +1,14 @@
 /**
- * M5StickC.h - ESP-IDF component to work with M5StickC
+ * m5stickc.h - ESP-IDF component to work with M5StickC
  * 
  * Include this header file to use the component.
  * 
- * (C) 2019 - Pablo Bacho <pablo@fabricadigital.org>
+ * (C) 2019 - Pablo Bacho <pablo@pablobacho.com>
  * This code is licensed under the MIT License.
  */
 
-#ifndef _M5STICK_H_
-#define _M5STICK_H_
+#ifndef _M5STICKC_H_
+#define _M5STICKC_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -48,4 +48,4 @@ esp_err_t m5stickc_set_display_brightness(uint8_t brightness);
 }
 #endif
 
-#endif // _M5STICK_H_
+#endif // _M5STICKC_H_

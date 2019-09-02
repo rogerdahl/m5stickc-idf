@@ -1,13 +1,13 @@
 /**
- * M5StickC.c - ESP-IDF component to work with M5StickC
+ * m5stickc.c - ESP-IDF component to work with M5StickC
  * 
  * Main code file.
  * 
- * (C) 2019 - Pablo Bacho <pablo@fabricadigital.org>
+ * (C) 2019 - Pablo Bacho <pablo@pablobacho.com>
  * This code is licensed under the MIT License.
  */
 
-#include "M5StickC.h"
+#include "m5stickc.h"
 
 static const char *TAG = "M5STICKC";
 
