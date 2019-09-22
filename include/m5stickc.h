@@ -20,32 +20,28 @@ extern "C" {
 
 #include "driver/i2c.h"
 
-#include "spi_master_lobo.h"
-#include "tftspi.h"
-#include "tft.h"
+#include "util/spi_master_lobo.h"
+#include "util/tftspi.h"
+#include "util/tft.h"
 
-#include "button.h"
+#include "m5power.h"
+#include "m5button.h"
+#include "m5display.h"
 
-#define M5STICKC_BUTTON_A   GPIO_NUM_37     /* Button A GPIO */
-#define M5STICKC_BUTTON_B   GPIO_NUM_39     /* Button B GPIO */
-#define M5STICKC_LED        GPIO_NUM_10     /* Red LED GPIO */
-#define M5STICKC_IR_TX      GPIO_NUM_9      /* IR GPIO */
+#define I2C_SDA_GPIO (gpio_num_t) 21    /*!< SDA pin of I²C bus */
+#define I2C_SCL_GPIO (gpio_num_t) 22    /*!< SCL pin of I²C bus */
 
-#define I2C_SDA_GPIO (gpio_num_t) 21    /* SDA pin of I²C bus */
-#define I2C_SCL_GPIO (gpio_num_t) 22    /* SCL pin of I²C bus */
-#define AXP192_I2C_ADDR 0x34            /* I²C address of AXP192 chip */
+extern esp_event_loop_handle_t m5_event_loop;   /*!< Event loop for M5 device-specific events */
 
-#define DISPLAY_TYPE DISP_TYPE_ST7735   /* Display type for display driver */
-#define DISPLAY_WIDTH 160               /* Display width in pixels after rotation */
-#define DISPLAY_HEIGHT 80               /* Display height in pixels after rotation */
-
-extern esp_event_loop_handle_t m5stickc_event_loop;
-extern spi_lobo_device_handle_t spi;    /* SPI device handle */
-
-esp_err_t m5stickc_init();
-esp_err_t m5stickc_init_power();
-esp_err_t m5stickc_init_display();
-esp_err_t m5stickc_set_display_brightness(uint8_t brightness);
+/**
+ * @brief   Initialize M5StickC
+ * 
+ *          Initializes power management, display and buttons.
+ * 
+ * @return  ESP_OK success
+ *          ESP_FAIL errors found
+ */
+esp_err_t m5_init();
 
 #ifdef __cplusplus
 }
