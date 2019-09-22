@@ -9,11 +9,29 @@
 
 #include "m5stickc.h"
 
-static const char *TAG = "M5STICKC";
+static const char *TAG = "m5stickc";
 
+esp_event_loop_handle_t m5stickc_event_loop;
 spi_lobo_device_handle_t spi;
 
 esp_err_t m5stickc_init() {
+    esp_err_t e;
+
+    esp_event_loop_args_t loop_args = {
+        .queue_size = 5,
+        .task_name = "m5stickc_event_loop",
+        .task_priority = 10,
+        .task_stack_size = 1000,
+        .task_core_id = 0
+    };
+
+    e = esp_event_loop_create(&loop_args, &m5stickc_event_loop);
+    if(e == ESP_OK) {
+        ESP_LOGD(TAG, "Event loop created");
+    } else {
+        ESP_LOGE(TAG, "Error creating event loop: %s", esp_err_to_name(e));
+        return e;
+    }
 
     // Init I²C
     i2c_config_t conf;
@@ -24,22 +42,23 @@ esp_err_t m5stickc_init() {
     conf.scl_pullup_en = GPIO_PULLUP_DISABLE;
     conf.master.clk_speed = 100000;
     ESP_LOGI(TAG, "Setting up I2C");
-    esp_err_t err = i2c_param_config(I2C_NUM_0, &conf);
-    if(err != ESP_OK) {
-        ESP_LOGE(TAG, "Error setting up I2C: %s", esp_err_to_name(err));
-        return err;
+    e = i2c_param_config(I2C_NUM_0, &conf);
+    if(e != ESP_OK) {
+        ESP_LOGE(TAG, "Error setting up I2C: %s", esp_err_to_name(e));
+        return e;
     }
     
-    err = i2c_driver_install(I2C_NUM_0, I2C_MODE_MASTER, 0, 0, 0);
-    if(err != ESP_OK) {
-        ESP_LOGE(TAG, "Error during I2C driver installation: %s", esp_err_to_name(err));
-        return err;
+    e = i2c_driver_install(I2C_NUM_0, I2C_MODE_MASTER, 0, 0, 0);
+    if(e != ESP_OK) {
+        ESP_LOGE(TAG, "Error during I2C driver installation: %s", esp_err_to_name(e));
+        return e;
     }
 
     // Init power management
     m5stickc_init_power();
 
-    // Init IMU
+    // Init buttons
+    m5stickc_button_init();
 
     // Init display
     m5stickc_init_display();

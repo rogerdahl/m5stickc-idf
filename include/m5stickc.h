@@ -20,9 +20,11 @@ extern "C" {
 
 #include "driver/i2c.h"
 
-#include "display/spi_master_lobo.h"
-#include "display/tftspi.h"
-#include "display/tft.h"
+#include "spi_master_lobo.h"
+#include "tftspi.h"
+#include "tft.h"
+
+#include "button.h"
 
 #define M5STICKC_BUTTON_A   GPIO_NUM_37     /* Button A GPIO */
 #define M5STICKC_BUTTON_B   GPIO_NUM_39     /* Button B GPIO */
@@ -37,6 +39,7 @@ extern "C" {
 #define DISPLAY_WIDTH 160               /* Display width in pixels after rotation */
 #define DISPLAY_HEIGHT 80               /* Display height in pixels after rotation */
 
+extern esp_event_loop_handle_t m5stickc_event_loop;
 extern spi_lobo_device_handle_t spi;    /* SPI device handle */
 
 esp_err_t m5stickc_init();

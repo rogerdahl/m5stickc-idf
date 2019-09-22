@@ -3,5 +3,5 @@
 #
 # (Uses default behaviour of compiling all source files in directory, adding 'include' to include path.)
 
-COMPONENT_SRCDIRS := . ./src ./display . display/font
-COMPONENT_ADD_INCLUDEDIRS := . ./include 
+COMPONENT_SRCDIRS := ./src ./src/font
+COMPONENT_ADD_INCLUDEDIRS := ./include

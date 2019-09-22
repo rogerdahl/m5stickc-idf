@@ -42,6 +42,8 @@ extern uint8_t tft_Comic24[];
 extern uint8_t tft_minya24[];
 extern uint8_t tft_tooney32[];
 extern uint8_t tft_def_small[];
+extern uint8_t opensans_semibold_12[];
+extern uint8_t opensans_extrabold_48[];
 
 // ==== Color definitions constants ==============
 const color_t TFT_BLACK       = {   0,   0,   0 };
@@ -1509,6 +1511,8 @@ void TFT_setFont(uint8_t font, const char *font_file)
 	  else if (font == TOONEY32_FONT) cfont.font = tft_tooney32;
 	  else if (font == SMALL_FONT) cfont.font = tft_SmallFont;
 	  else if (font == DEF_SMALL_FONT) cfont.font = tft_def_small;
+	  else if (font == OPENSANS_SEMIBOLD_12) cfont.font = opensans_semibold_12;
+	  else if (font == OPENSANS_EXTRABOLD_48) cfont.font = opensans_extrabold_48;
 	  else cfont.font = tft_DefaultFont;
 
 	  cfont.bitmap = 1;
