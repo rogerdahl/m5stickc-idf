@@ -11,7 +11,11 @@ static const char * TAG = "m5button";
 
 ESP_EVENT_DEFINE_BASE(M5BUTTON_EVENT_BASE);
 
+#if defined(CONFIG_SUPPORT_STATIC_ALLOCATION)
 StaticEventGroup_t m5button_event_group_buffer;
+StaticTask_t m5button_task_buffer;
+#endif
+
 EventGroupHandle_t m5button_event_group;
 
 void IRAM_ATTR m5button_buttonA_isr_handler(void* arg) {
@@ -27,7 +31,11 @@ void IRAM_ATTR m5button_buttonA_isr_handler(void* arg) {
 esp_err_t m5button_init() {
     esp_err_t e;
 
+    #if defined(CONFIG_SUPPORT_STATIC_ALLOCATION)
     m5button_event_group = xEventGroupCreateStatic(&m5button_event_group_buffer);
+    #else
+    m5button_event_group = xEventGroupCreate();
+    #endif
     if(m5button_event_group == NULL) {
         ESP_LOGE(TAG, "Error creating button event group");
         return ESP_FAIL;
@@ -46,10 +54,18 @@ esp_err_t m5button_init() {
     }
     gpio_isr_handler_add(M5BUTTON_BUTTON_A_GPIO, m5button_buttonA_isr_handler, NULL);
 
-    xTaskCreate(&m5button_task, "button_task", configMINIMAL_STACK_SIZE*10, NULL, 20, NULL);
+    #if defined(CONFIG_SUPPORT_STATIC_ALLOCATION)
+    xTaskCreateStatic(&m5button_task, "button_task", configMINIMAL_STACK_SIZE, NULL, 20, NULL, &m5button_task_buffer);
+    #else
+    BaseType_t r = xTaskCreate(&m5button_task, "button_task", configMINIMAL_STACK_SIZE, NULL, 20, NULL);
+    if(r != pdPASS) {
+        ESP_LOGE(TAG, "Error creating button_task");
+        gpio_isr_handler_remove(M5BUTTON_BUTTON_A_GPIO);
+        return ESP_FAIL;
+    }
+    #endif
 
     ESP_LOGD(TAG, "Button initialized");
-
     return ESP_OK;
 }
 

@@ -130,9 +130,7 @@ extern const color_t TFT_PINK;
 #define SMALL_FONT		7
 #define DEF_SMALL_FONT	8
 #define FONT_7SEG		9
-#define OPENSANS_SEMIBOLD_12     10
-#define OPENSANS_EXTRABOLD_48     11
-#define USER_FONT		12  // font will be read from file
+#define USER_FONT		10  // font will be read from file
 
 
 
