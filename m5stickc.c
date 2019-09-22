@@ -296,21 +296,23 @@ esp_err_t m5stickc_init_display() {
 }
 
 esp_err_t m5stickc_set_display_brightness(uint8_t brightness) {
+    esp_err_t e;
+
     i2c_cmd_handle_t cmd = i2c_cmd_link_create();
     if(cmd == NULL) {
         ESP_LOGE(TAG, "I2C link creation failed");
         return ESP_FAIL;
     }
 
-    esp_err_t ret = i2c_master_start(cmd);
+    i2c_master_start(cmd);
     i2c_master_write_byte(cmd, (AXP192_I2C_ADDR << 1) | I2C_MASTER_WRITE, true);
     i2c_master_write_byte(cmd, 0x28, true);
     i2c_master_write_byte(cmd, ((brightness & 0x0f) << 4), true);
     i2c_master_stop(cmd);
-    esp_err_t err = i2c_master_cmd_begin(I2C_NUM_0, cmd, 10/portTICK_PERIOD_MS);
-    if (err != ESP_OK) {
-        ESP_LOGE(TAG, "Error setting brightness");
-        return err;
+    e = i2c_master_cmd_begin(I2C_NUM_0, cmd, 10/portTICK_PERIOD_MS);
+    if (e != ESP_OK) {
+        ESP_LOGE(TAG, "Error setting brightness: %s", esp_err_to_name(e));
+        return e;
     } 
     i2c_cmd_link_delete(cmd);
 

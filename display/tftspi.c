@@ -8,8 +8,6 @@
  *
 */
 
-// TODO: Arreglar x1+=1; y1+=26; x2+=1; y2+=26; Buscar "CHAPUZA" para encontrar las líneas
-
 #include <string.h>
 #include "tftspi.h"
 #include "esp_system.h"
@@ -441,7 +439,7 @@ void IRAM_ATTR TFT_pushColorRep(int x1, int y1, int x2, int y2, color_t color, u
 {
 	if (disp_select() != ESP_OK) return;
 
-	x1+=1; y1+=26; x2+=1; y2+=26; // CHAPUZA!!!!!!
+	x1+=1; y1+=26; x2+=1; y2+=26; // FIXME This hack fixes positioning issue on M5StickC display
 	// ** Send address window **
 	disp_spi_transfer_addrwin(x1, x2, y1, y2);
 
@@ -456,7 +454,7 @@ void IRAM_ATTR TFT_pushColorRep(int x1, int y1, int x2, int y2, color_t color, u
 void IRAM_ATTR send_data(int x1, int y1, int x2, int y2, uint32_t len, color_t *buf)
 {
 	// ** Send address window **
-	x1+=1; y1+=26; x2+=1; y2+=26; // CHAPUZA!!!!!!
+	x1+=1; y1+=26; x2+=1; y2+=26; // FIXME This hack fixes positioning issue on M5StickC
 	disp_spi_transfer_addrwin(x1, x2, y1, y2);
 	_TFT_pushColorRep(buf, len, 0, 0);
 }
