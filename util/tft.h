@@ -131,6 +131,7 @@ extern const color_t TFT_PINK;
 #define DEF_SMALL_FONT	8
 #define FONT_7SEG		9
 #define USER_FONT		10  // font will be read from file
+#define CUSTOM_EMBEDDED_FONT 11 // Font embeded in user program
 
 
 

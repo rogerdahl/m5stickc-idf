@@ -28,6 +28,10 @@ Use **m5display_set_backlight_level(uint8_t backlight_level)** to set the backli
 
 Includes a modified version of [ESP32_TFT_library](https://github.com/loboris/ESP32_TFT_library) by Boris Lovosevic. Check his GitHub for help on how to use the display.
 
+One of the modifications enables support for custom embedded fonts. After converting the font file to embedded array using the tools provided by Loboris, use:
+
+    TFT_setFont(CUSTOM_EMBEDDED_FONT, (char *) opensans_semibold_12); // opensans_semibold_12 is my custom embedded font.
+
 ## Contributing 
 
 If you find a bug, improve documentation, add a feature, or anything else, I encourage you to open an issue and/or make a pull request.

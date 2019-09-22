@@ -1509,6 +1509,7 @@ void TFT_setFont(uint8_t font, const char *font_file)
 	  else if (font == TOONEY32_FONT) cfont.font = tft_tooney32;
 	  else if (font == SMALL_FONT) cfont.font = tft_SmallFont;
 	  else if (font == DEF_SMALL_FONT) cfont.font = tft_def_small;
+	  else if (font == CUSTOM_EMBEDDED_FONT) cfont.font = (uint8_t *) font_file;
 	  else cfont.font = tft_DefaultFont;
 
 	  cfont.bitmap = 1;
