@@ -14,6 +14,7 @@ ESP_EVENT_DEFINE_BASE(M5BUTTON_EVENT_BASE);
 #if defined(CONFIG_SUPPORT_STATIC_ALLOCATION)
 StaticEventGroup_t m5button_event_group_buffer;
 StaticTask_t m5button_task_buffer;
+StackType_t m5button_task_stack[];
 #endif
 
 EventGroupHandle_t m5button_event_group;
@@ -55,9 +56,14 @@ esp_err_t m5button_init() {
     gpio_isr_handler_add(M5BUTTON_BUTTON_A_GPIO, m5button_buttonA_isr_handler, NULL);
 
     #if defined(CONFIG_SUPPORT_STATIC_ALLOCATION)
-    xTaskCreateStatic(&m5button_task, "button_task", configMINIMAL_STACK_SIZE, NULL, 20, NULL, &m5button_task_buffer);
+    TaskHandle_t task = xTaskCreateStatic(&m5button_task, "button_task", M5BUTTON_TASK_STACK_DEPTH, NULL, 20, m5button_task_stack, &m5button_task_buffer);
+    if(task == NULL) {
+        ESP_LOGE(TAG, "Error creating button_task");
+        gpio_isr_handler_remove(M5BUTTON_BUTTON_A_GPIO);
+        return ESP_FAIL;
+    }
     #else
-    BaseType_t r = xTaskCreate(&m5button_task, "button_task", configMINIMAL_STACK_SIZE, NULL, 20, NULL);
+    BaseType_t r = xTaskCreate(&m5button_task, "button_task", M5BUTTON_TASK_STACK_DEPTH, NULL, 20, NULL);
     if(r != pdPASS) {
         ESP_LOGE(TAG, "Error creating button_task");
         gpio_isr_handler_remove(M5BUTTON_BUTTON_A_GPIO);

@@ -21,7 +21,7 @@ esp_err_t m5_init() {
         .queue_size = 5,
         .task_name = "m5_event_loop",
         .task_priority = 10,
-        .task_stack_size = 15000,
+        .task_stack_size = 2048,
         .task_core_id = 0
     };
 

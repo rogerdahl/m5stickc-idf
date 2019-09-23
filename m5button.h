@@ -43,8 +43,14 @@ typedef enum {
 #define M5BUTTON_DEBOUNCE_TIME   10
 #define M5BUTTON_HOLD_TIME       2000
 
+#define M5BUTTON_TASK_STACK_DEPTH   2048
+#if defined(CONFIG_SUPPORT_STATIC_ALLOCATION)
+extern StaticEventGroup_t m5button_event_group_buffer;
+extern StaticTask_t m5button_task_buffer;
+extern StackType_t m5button_task_stack[M5BUTTON_TASK_STACK_DEPTH];
+#endif
+
 /*!< event_group */
-StaticEventGroup_t m5button_event_group_buffer;
 extern EventGroupHandle_t m5button_event_group;
 
 /**
