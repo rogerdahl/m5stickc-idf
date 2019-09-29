@@ -272,7 +272,7 @@ esp_err_t m5power_register_write(uint8_t register_address, uint8_t register_cont
     return ESP_OK;
 }
 
-esp_err_t m5power_register_set_bits(uint8_t register_address, uint8_t set_bits)
+esp_err_t m5power_register_set_bits(uint8_t register_address, uint8_t bits_to_set)
 {
     esp_err_t e;
     uint8_t register_content;
@@ -282,7 +282,7 @@ esp_err_t m5power_register_set_bits(uint8_t register_address, uint8_t set_bits)
         return ESP_FAIL;
     }
 
-    register_content |= set_bits;
+    register_content |= bits_to_set;
 
     e = m5power_register_write(register_address, register_content);
     if(e != ESP_OK) {
@@ -292,7 +292,7 @@ esp_err_t m5power_register_set_bits(uint8_t register_address, uint8_t set_bits)
     return ESP_OK;
 }
 
-esp_err_t m5power_register_unset_bits(uint8_t register_address, uint8_t unset_bits)
+esp_err_t m5power_register_clear_bits(uint8_t register_address, uint8_t bits_to_clear)
 {
     esp_err_t e;
     uint8_t register_content;
@@ -302,7 +302,7 @@ esp_err_t m5power_register_unset_bits(uint8_t register_address, uint8_t unset_bi
         return ESP_FAIL;
     }
 
-    register_content &= ~unset_bits;
+    register_content &= ~bits_to_clear;
 
     e = m5power_register_write(register_address, register_content);
     if(e != ESP_OK) {

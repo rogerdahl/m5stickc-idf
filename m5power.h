@@ -53,28 +53,28 @@ esp_err_t m5power_register_read(uint8_t register_address, uint8_t * register_con
 esp_err_t m5power_register_write(uint8_t register_address, uint8_t register_content);
 
 /**
- * @brief   Set to 1 some bits of a register. Will not change other bits.
+ * @brief   Set to 1 a selection of bits in a register. Will not change other bits.
  * 
  * @param   register_address
- * @param   set_bits bits to be set (as 1)
+ * @param   bits_to_set bits to be set
  * 
  * @return  ESP_OK success
  *          ESP_FAIL failed
  *          ESP_ERR_NO_MEM out of memory
  */
-esp_err_t m5power_register_set_bits(uint8_t register_address, uint8_t set_bits);
+esp_err_t m5power_register_set_bits(uint8_t register_address, uint8_t bits_to_set);
 
 /**
- * @brief   Set top 0 some bits of a register. Will not change other bits.
+ * @brief   Clear a selection of bits in a register. Will not change other bits.
  * 
  * @param   register_address
- * @param   set_bits bits to be set to 0 (pass them as 1)
+ * @param   bits_to_clear bits to clear (pass them as 1s)
  * 
  * @return  ESP_OK success
  *          ESP_FAIL failed
  *          ESP_ERR_NO_MEM out of memory
  */
-esp_err_t m5power_register_unset_bits(uint8_t register_address, uint8_t unset_bits);
+esp_err_t m5power_register_clear_bits(uint8_t register_address, uint8_t bits_to_clear);
 
 #ifdef __cplusplus
 }

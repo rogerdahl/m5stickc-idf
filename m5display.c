@@ -99,7 +99,7 @@ esp_err_t m5display_off()
 {
     esp_err_t e;
 
-    e = m5power_register_unset_bits(DCDC1_DCDC3_LDO2_LDO3_SWITCH_CONTROL_REG, BIT2);
+    e = m5power_register_clear_bits(DCDC1_DCDC3_LDO2_LDO3_SWITCH_CONTROL_REG, BIT2);
     if(e == ESP_OK) {
         ESP_LOGD(TAG, "Turned off");
     } else {
