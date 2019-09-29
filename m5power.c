@@ -43,7 +43,7 @@ esp_err_t m5power_init() {
     i2c_master_start(cmd);
     i2c_master_write_byte(cmd, (AXP192_I2C_ADDR << 1) | I2C_MASTER_WRITE, true);
     i2c_master_write_byte(cmd, 0x12, true);
-    i2c_master_write_byte(cmd, (BIT6 | BIT3 | BIT2 | BIT0), true);
+    i2c_master_write_byte(cmd, (BIT6 | BIT4 | BIT3 | BIT2 | BIT0), true);
     i2c_master_stop(cmd);
     e = i2c_master_cmd_begin(I2C_NUM_0, cmd, 10/portTICK_PERIOD_MS);
     if (e != ESP_OK) {
@@ -212,6 +212,102 @@ esp_err_t m5power_init() {
     } else {
         ESP_LOGE(TAG, "%d errors found while initializing power manager", error_count);
         return ESP_FAIL;
+    }    
+}
+
+esp_err_t m5power_register_read(uint8_t register_address, uint8_t * register_content)
+{
+    esp_err_t e;
+
+    // Read register content
+    i2c_cmd_handle_t cmd = i2c_cmd_link_create();
+    if(cmd == NULL) {
+        ESP_LOGE(TAG, "Error creating I2C link");
+        return ESP_ERR_NO_MEM;
     }
-    
+
+    i2c_master_start(cmd);
+    i2c_master_write_byte(cmd, (AXP192_I2C_ADDR << 1) | I2C_MASTER_WRITE, true);
+    i2c_master_write_byte(cmd, register_address, true);
+    i2c_master_start(cmd);
+    i2c_master_write_byte(cmd, (AXP192_I2C_ADDR << 1) | I2C_MASTER_READ, true);
+    i2c_master_read_byte(cmd, register_content, I2C_MASTER_LAST_NACK);
+    i2c_master_stop(cmd);
+    e = i2c_master_cmd_begin(I2C_NUM_0, cmd, 250/portTICK_PERIOD_MS);
+    if (e == ESP_OK) {
+        ESP_LOGD(TAG, "Register %#04x content: %#04x", register_address, *register_content);
+    } else {
+        ESP_LOGE(TAG, "Error reading register %#04x: %s", register_address, esp_err_to_name(e));
+        return ESP_FAIL;
+    }
+    i2c_cmd_link_delete(cmd);
+
+    return ESP_OK;
+}
+
+esp_err_t m5power_register_write(uint8_t register_address, uint8_t register_content)
+{
+    esp_err_t e;
+
+    i2c_cmd_handle_t cmd = i2c_cmd_link_create();
+    if(cmd == NULL) {
+        ESP_LOGE(TAG, "Error creating I2C link");
+        return ESP_ERR_NO_MEM;
+    }
+
+    i2c_master_start(cmd);
+    i2c_master_write_byte(cmd, (AXP192_I2C_ADDR << 1) | I2C_MASTER_WRITE, true);
+    i2c_master_write_byte(cmd, register_address, true);
+    i2c_master_write_byte(cmd, register_content, true);
+    i2c_master_stop(cmd);
+    e = i2c_master_cmd_begin(I2C_NUM_0, cmd, 10/portTICK_PERIOD_MS);
+    if (e == ESP_OK) {
+        ESP_LOGD(TAG, "Register %#04x set to %#04x", register_address, register_content);
+    } else {
+        ESP_LOGE(TAG, "Error setting register %#04x set to %#04x: %s", register_address, register_content, esp_err_to_name(e));
+        return ESP_FAIL;
+    } 
+    i2c_cmd_link_delete(cmd);
+
+    return ESP_OK;
+}
+
+esp_err_t m5power_register_set_bits(uint8_t register_address, uint8_t set_bits)
+{
+    esp_err_t e;
+    uint8_t register_content;
+
+    e = m5power_register_read(register_address, &register_content);
+    if(e != ESP_OK) {
+        return ESP_FAIL;
+    }
+
+    register_content |= set_bits;
+
+    e = m5power_register_write(register_address, register_content);
+    if(e != ESP_OK) {
+        return ESP_FAIL;
+    }
+
+    return ESP_OK;
+}
+
+esp_err_t m5power_register_unset_bits(uint8_t register_address, uint8_t unset_bits)
+{
+    esp_err_t e;
+    uint8_t register_content;
+
+    e = m5power_register_read(register_address, &register_content);
+    if(e != ESP_OK) {
+        return ESP_FAIL;
+    }
+
+    register_content &= ~unset_bits;
+
+    e = m5power_register_write(register_address, register_content);
+    if(e != ESP_OK) {
+        return ESP_FAIL;
+    }
+
+    return ESP_OK;
 }

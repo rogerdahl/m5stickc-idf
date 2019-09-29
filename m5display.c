@@ -75,24 +75,52 @@ esp_err_t m5display_init() {
 
 esp_err_t m5display_set_backlight_level(uint8_t backlight_level) {
     esp_err_t e;
+    uint8_t register_content;
 
-    i2c_cmd_handle_t cmd = i2c_cmd_link_create();
-    if(cmd == NULL) {
-        ESP_LOGE(TAG, "Error creating I2C link");
+    e = m5power_register_read(LDO2_LDO3_VOLTAGE_SETTING_REG, &register_content);
+    if(e != ESP_OK) {
+        ESP_LOGE(TAG, "Error setting reading register to set backlight level: %s", esp_err_to_name(e));
         return ESP_FAIL;
     }
 
-    i2c_master_start(cmd);
-    i2c_master_write_byte(cmd, (AXP192_I2C_ADDR << 1) | I2C_MASTER_WRITE, true);
-    i2c_master_write_byte(cmd, 0x28, true);
-    i2c_master_write_byte(cmd, ((backlight_level & 0x0f) << 4), true);
-    i2c_master_stop(cmd);
-    e = i2c_master_cmd_begin(I2C_NUM_0, cmd, 10/portTICK_PERIOD_MS);
-    if (e != ESP_OK) {
-        ESP_LOGE(TAG, "Error setting backlight level: %s", esp_err_to_name(e));
-        return ESP_FAIL;
-    } 
-    i2c_cmd_link_delete(cmd);
+    register_content &= 0x0F; // Clear 4 msb
+    register_content |= (0x80 | (backlight_level << 4)); // Set value. Values less than 0x80 are completely off.
 
+    e = m5power_register_write(LDO2_LDO3_VOLTAGE_SETTING_REG, register_content);
+    if(e != ESP_OK) {
+        ESP_LOGE(TAG, "Error writing register to set backlight level: %s", esp_err_to_name(e));
+        return ESP_FAIL;
+    }
+
+    return ESP_OK;
+}
+
+esp_err_t m5display_off()
+{
+    esp_err_t e;
+
+    e = m5power_register_unset_bits(DCDC1_DCDC3_LDO2_LDO3_SWITCH_CONTROL_REG, BIT2);
+    if(e == ESP_OK) {
+        ESP_LOGD(TAG, "Turned off");
+    } else {
+        ESP_LOGD(TAG, "Error turning off: %s", esp_err_to_name(e));
+        return ESP_FAIL;
+    }
+
+    return ESP_OK;
+}
+
+esp_err_t m5display_on()
+{
+    esp_err_t e;
+
+    e = m5power_register_set_bits(DCDC1_DCDC3_LDO2_LDO3_SWITCH_CONTROL_REG, BIT2);
+    if(e == ESP_OK) {
+        ESP_LOGD(TAG, "Turned on");
+    } else {
+        ESP_LOGD(TAG, "Error turning on: %s", esp_err_to_name(e));
+        return ESP_FAIL;
+    }
+    
     return ESP_OK;
 }

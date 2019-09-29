@@ -16,8 +16,7 @@ extern "C" {
 #include "esp_log.h"
 
 #include "m5stickc.h"
-
-#define AXP192_I2C_ADDR 0x34            /*!< I²C address of AXP192 chip */
+#include "m5power.h"
 
 #define M5DISPLAY_TYPE DISP_TYPE_ST7735S  /*!< Display type for display driver */
 #define M5DISPLAY_WIDTH 160               /*!< Display width in pixels after rotation */
@@ -37,12 +36,16 @@ esp_err_t m5display_init();
 /**
  * @brief   Set display backlight level
  * 
- * @param   backlight_level Backlight level from 0x00 to 0x0F
+ * @param   backlight_level Backlight level from 0 (lowest) to 7 (brightest)
  * 
  * @return  ESP_OK success
  *          ESP_FAIL failed
  */
 esp_err_t m5display_set_backlight_level(uint8_t backlight_level);
+
+esp_err_t m5display_off();
+
+esp_err_t m5display_on();
 
 #ifdef __cplusplus
 }
