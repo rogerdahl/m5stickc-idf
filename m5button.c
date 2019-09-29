@@ -19,7 +19,8 @@ StackType_t m5button_task_stack[];
 
 EventGroupHandle_t m5button_event_group;
 
-void IRAM_ATTR m5button_buttonA_isr_handler(void* arg) {
+void IRAM_ATTR m5button_buttonA_isr_handler(void* arg)
+{
     BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 
     if(gpio_get_level(M5BUTTON_BUTTON_A_GPIO) == 0) {
@@ -29,7 +30,8 @@ void IRAM_ATTR m5button_buttonA_isr_handler(void* arg) {
     }
 }
 
-esp_err_t m5button_init() {
+esp_err_t m5button_init()
+{
     esp_err_t e;
 
     #if defined(CONFIG_SUPPORT_STATIC_ALLOCATION)
@@ -75,7 +77,23 @@ esp_err_t m5button_init() {
     return ESP_OK;
 }
 
-void m5button_task(void * pvParameter) {
+bool m5button_is_pressed(m5button_id_t button)
+{
+    gpio_num_t gpio;
+
+    switch(button) {
+        case BUTTON_A:
+            gpio = M5BUTTON_BUTTON_A_GPIO;
+        break;
+        default:
+            return false;
+        break;
+    }
+    return (gpio_get_level(gpio) == 0) ? true : false;
+}
+
+void m5button_task(void * pvParameter)
+{
     EventBits_t event;
 
     while(1) {

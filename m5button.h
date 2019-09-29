@@ -33,7 +33,11 @@ typedef enum {
     M5BUTTON_BUTTON_A_CLICK = 0,        /*!< Normal button press */
     M5BUTTON_BUTTON_A_HOLD,             /*!< Button hold */
     M5BUTTON_EVENT_MAX
-} m5_button_event_id_t;
+} m5button_event_id_t;
+
+typedef enum {
+    BUTTON_A = 0
+} m5button_id_t;
 
 /*!< event_group flag bits */
 #define M5BUTTON_BUTTON_A_PUSH_BIT      0b00000001
@@ -67,6 +71,15 @@ void IRAM_ATTR m5button_buttonA_isr_handler(void* arg);
  *          ESP_FAIL failed
  */
 esp_err_t m5button_init();
+
+/**
+ * @brief   Check if button is pressed
+ * 
+ * @param   button button to check
+ * @return  false not pressed
+ *          true otherwise pressed
+ */
+bool m5button_is_pressed(m5button_id_t button);
 
 /**
  * @brief   Generates button events
