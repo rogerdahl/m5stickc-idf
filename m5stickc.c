@@ -1,8 +1,6 @@
 /**
- * m5.c - ESP-IDF component to work with M5
- * 
- * Main code file.
- * 
+ * m5stickc.c - ESP-IDF component to work with M5
+ *
  * (C) 2019 - Pablo Bacho <pablo@pablobacho.com>
  * This code is licensed under the MIT License.
  */
@@ -62,7 +60,7 @@ esp_err_t m5_init() {
         ESP_LOGE(TAG, "Error setting up I2C: %s", esp_err_to_name(e));
         ++error_count;
     }
-    
+
     // Init button
     e = m5button_init();
     if(e == ESP_OK) {

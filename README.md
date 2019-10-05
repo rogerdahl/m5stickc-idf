@@ -9,7 +9,7 @@ ESP-IDF component to work with M5StickC. Works without including the Arduino fra
 * Initializes power management IC AXP192
   * Provides easy function calls to read/write its registers
 * Initializes display ST7735
-* Initializes the main push button
+* Initializes push buttons
   * "Click" & "hold" events available
 * Set display backlight level
   * Option to turn it completely off
@@ -22,7 +22,7 @@ Check out the [example project](https://github.com/pablobacho/m5stickc-idf-examp
 
 Clone repository in your `components` folder in your project and include `m5stickc.h` in your source code.
 
-Call `m5_init()` to initialize your M5StickC. This initializes the AXP192 power manager chip, the display and the main push button.
+Call `m5_init()` to initialize your M5StickC. This initializes the AXP192 power manager chip, the display and the push buttons.
 
 This component creates a custom event loop called `m5_event_loop` for device events. User program can subscribe to it and listen to events such as "button click" and "button hold". More actions coming. Check out .h files for specific module events.
 
@@ -36,7 +36,7 @@ One of the modifications enables support for custom embedded fonts. After conver
 
     TFT_setFont(CUSTOM_EMBEDDED_FONT, (char *) opensans_semibold_12); // opensans_semibold_12 is my custom embedded font.
 
-## Contributing 
+## Contributing
 
 If you find a bug, improve documentation, add a feature, or anything else, I encourage you to open an issue and/or make a pull request.
 
