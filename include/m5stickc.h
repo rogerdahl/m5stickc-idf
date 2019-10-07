@@ -1,8 +1,8 @@
 /**
  * m5stickc.h - ESP-IDF component to work with M5StickC
- * 
+ *
  * Include this header file to use the component.
- * 
+ *
  * (C) 2019 - Pablo Bacho <pablo@pablobacho.com>
  * This code is licensed under the MIT License.
  */
@@ -18,30 +18,29 @@ extern "C" {
 #include "esp_err.h"
 #include "esp_log.h"
 
-#include "driver/i2c.h"
-
-#include "util/spi_master_lobo.h"
-#include "util/tftspi.h"
-#include "util/tft.h"
-
 #include "m5power.h"
 #include "m5button.h"
 #include "m5display.h"
 
-#define I2C_SDA_GPIO (gpio_num_t) 21    /*!< SDA pin of I²C bus */
-#define I2C_SCL_GPIO (gpio_num_t) 22    /*!< SCL pin of I²C bus */
-
 extern esp_event_loop_handle_t m5_event_loop;   /*!< Event loop for M5 device-specific events */
+
+typedef struct {
+    m5power_config_t power;
+} m5stickc_config_t;
+
+#define M5STICKC_CONFIG_DEFAULT() { \
+    .power = M5POWER_CONFIG_DEFAULT() \
+    };
 
 /**
  * @brief   Initialize M5StickC
- * 
+ *
  *          Initializes power management, display and buttons.
- * 
+ *
  * @return  ESP_OK success
  *          ESP_FAIL errors found
  */
-esp_err_t m5_init();
+esp_err_t m5_init(m5stickc_config_t * config);
 
 #ifdef __cplusplus
 }

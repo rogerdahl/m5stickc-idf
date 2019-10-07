@@ -11,7 +11,7 @@ static const char *TAG = "m5stickc";
 
 esp_event_loop_handle_t m5_event_loop;
 
-esp_err_t m5_init() {
+esp_err_t m5_init(m5stickc_config_t * config) {
     esp_err_t e;
     uint8_t error_count = 0;
 
@@ -45,7 +45,7 @@ esp_err_t m5_init() {
         e = i2c_driver_install(I2C_NUM_0, I2C_MODE_MASTER, 0, 0, 0);
         if(e == ESP_OK) {
             // Init power management
-            e = m5power_init();
+            e = m5power_init(&config->power);
             if(e == ESP_OK) {
                 ESP_LOGD(TAG, "Power manager initialized");
             } else {

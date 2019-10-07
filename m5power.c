@@ -1,6 +1,6 @@
 /**
  * m5power.c
- * 
+ *
  * (C) 2019 - Pablo Bacho <pablo@pablobacho.com>
  * This code is licensed under the MIT License.
  */
@@ -9,7 +9,7 @@
 
 static const char * TAG = "m5power";
 
-esp_err_t m5power_init() {
+esp_err_t m5power_init(m5power_config_t * config) {
     esp_err_t e;
     uint8_t error_count = 0;
     i2c_cmd_handle_t cmd;
@@ -28,7 +28,7 @@ esp_err_t m5power_init() {
     if (e != ESP_OK) {
         ESP_LOGE(TAG, "error OLED_VPP enable");
         error_count++;
-    } 
+    }
     i2c_cmd_link_delete(cmd);
 
     // Enable DC-DC1, OLED_VDD, 5B V_EXT
@@ -43,13 +43,17 @@ esp_err_t m5power_init() {
     i2c_master_start(cmd);
     i2c_master_write_byte(cmd, (AXP192_I2C_ADDR << 1) | I2C_MASTER_WRITE, true);
     i2c_master_write_byte(cmd, 0x12, true);
-    i2c_master_write_byte(cmd, (BIT6 | BIT4 | BIT3 | BIT2 | BIT0), true);
+    if(config->enable_lcd_backlight == true) {
+        i2c_master_write_byte(cmd, (BIT6 | BIT4 | BIT3 | BIT2 | BIT0), true);
+    } else {
+        i2c_master_write_byte(cmd, (BIT6 | BIT4 | BIT3 | BIT0), true);
+    }
     i2c_master_stop(cmd);
     e = i2c_master_cmd_begin(I2C_NUM_0, cmd, 10/portTICK_PERIOD_MS);
     if (e != ESP_OK) {
         ESP_LOGE(TAG, "error DC-DC1, OLED_VDD, 5B V_EXT enable");
         error_count++;
-    } 
+    }
     i2c_cmd_link_delete(cmd);
 
     // Enable LDO2 & LDO3, LED & TFT 3.3V
@@ -60,13 +64,13 @@ esp_err_t m5power_init() {
     i2c_master_start(cmd);
     i2c_master_write_byte(cmd, (AXP192_I2C_ADDR << 1) | I2C_MASTER_WRITE, true);
     i2c_master_write_byte(cmd, 0x28, true);
-    i2c_master_write_byte(cmd, 0xff, true); // This was 0xff. Just trying things.
+    i2c_master_write_byte(cmd, 0x0f | (0x80 | (config->lcd_backlight_level << 4)), true);
     i2c_master_stop(cmd);
     e = i2c_master_cmd_begin(I2C_NUM_0, cmd, 10/portTICK_PERIOD_MS);
     if (e != ESP_OK) {
         ESP_LOGE(TAG, "error LDO2 & LDO3, LED & TFT enable");
         error_count++;
-    } 
+    }
     i2c_cmd_link_delete(cmd);
 
     // Enable USB thru mode
@@ -80,13 +84,13 @@ esp_err_t m5power_init() {
     i2c_master_start(cmd);
     i2c_master_write_byte(cmd, (AXP192_I2C_ADDR << 1) | I2C_MASTER_WRITE, true);
     i2c_master_write_byte(cmd, 0x30, true);
-    i2c_master_write_byte(cmd, 0x00, true); // 
+    i2c_master_write_byte(cmd, 0x00, true); //
     i2c_master_stop(cmd);
     e = i2c_master_cmd_begin(I2C_NUM_0, cmd, 10/portTICK_PERIOD_MS);
     if (e != ESP_OK) {
         ESP_LOGE(TAG, "error LDO2 & LDO3, LED & TFT enable");
         error_count++;
-    } 
+    }
     i2c_cmd_link_delete(cmd);
 
     // Enable 3.0V ??? What is the Voff function????
@@ -103,7 +107,7 @@ esp_err_t m5power_init() {
     if (e != ESP_OK) {
         ESP_LOGE(TAG, "error 3.0V enable");
         error_count++;
-    } 
+    }
     i2c_cmd_link_delete(cmd);
 
     // Enable Charging, 100mA, 4.2V, End at 0.9
@@ -125,7 +129,7 @@ esp_err_t m5power_init() {
     if (e != ESP_OK) {
         ESP_LOGE(TAG, "error Charging enable");
         error_count++;
-    } 
+    }
     i2c_cmd_link_delete(cmd);
 
     // Enable PEK
@@ -145,7 +149,7 @@ esp_err_t m5power_init() {
     if (e != ESP_OK) {
         ESP_LOGE(TAG, "error PEK enable");
         error_count++;
-    } 
+    }
     i2c_cmd_link_delete(cmd);
 
     // Enable ADCs
@@ -168,7 +172,7 @@ esp_err_t m5power_init() {
     if (e != ESP_OK) {
         ESP_LOGE(TAG, "error ADCs enable");
         error_count++;
-    } 
+    }
     i2c_cmd_link_delete(cmd);
 
     // Enable GPIO0
@@ -185,7 +189,7 @@ esp_err_t m5power_init() {
     if (e != ESP_OK) {
         ESP_LOGE(TAG, "error GPIO0 enable");
         error_count++;
-    } 
+    }
     i2c_cmd_link_delete(cmd);
 
     // Enable Coulomb counter
@@ -203,7 +207,7 @@ esp_err_t m5power_init() {
     if (e != ESP_OK) {
         ESP_LOGE(TAG, "error Coulomb counter enable");
         error_count++;
-    } 
+    }
     i2c_cmd_link_delete(cmd);
 
     if(error_count == 0) {
@@ -212,7 +216,7 @@ esp_err_t m5power_init() {
     } else {
         ESP_LOGE(TAG, "%d errors found while initializing power manager", error_count);
         return ESP_FAIL;
-    }    
+    }
 }
 
 esp_err_t m5power_register_read(uint8_t register_address, uint8_t * register_content)
@@ -266,7 +270,7 @@ esp_err_t m5power_register_write(uint8_t register_address, uint8_t register_cont
     } else {
         ESP_LOGE(TAG, "Error setting register %#04x set to %#04x: %s", register_address, register_content, esp_err_to_name(e));
         return ESP_FAIL;
-    } 
+    }
     i2c_cmd_link_delete(cmd);
 
     return ESP_OK;

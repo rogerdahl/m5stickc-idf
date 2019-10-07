@@ -1,6 +1,6 @@
 /**
  * m5display.c
- * 
+ *
  * (C) 2019 - Pablo Bacho <pablo@pablobacho.com>
  * This code is licensed under the MIT License.
  */
@@ -59,7 +59,7 @@ esp_err_t m5display_init() {
 
     // ==== Set SPI clock used for display operations ====
     spi_lobo_set_speed(m5display_spi, DEFAULT_SPI_CLOCK);
-    
+
     font_rotate = 0;
     text_wrap = 0;
     font_transparent = 0;
@@ -121,6 +121,6 @@ esp_err_t m5display_on()
         ESP_LOGD(TAG, "Error turning on: %s", esp_err_to_name(e));
         return ESP_FAIL;
     }
-    
+
     return ESP_OK;
 }

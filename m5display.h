@@ -1,6 +1,6 @@
 /**
  * m5display.h
- * 
+ *
  * (C) 2019 - Pablo Bacho <pablo@pablobacho.com>
  * This code is licensed under the MIT License.
  */
@@ -14,8 +14,9 @@ extern "C" {
 
 #include "esp_system.h"
 #include "esp_log.h"
-
-#include "m5stickc.h"
+#include "util/spi_master_lobo.h"
+#include "util/tftspi.h"
+#include "util/tft.h"
 #include "m5power.h"
 
 #define M5DISPLAY_TYPE DISP_TYPE_ST7735S  /*!< Display type for display driver */
@@ -27,7 +28,7 @@ extern spi_lobo_device_handle_t m5display_spi;    /*!< SPI device handle */
 
 /**
  * @brief   Initialize display
- * 
+ *
  * @return  ESP_OK success
  *          ESP_FAIL failed
  */
@@ -35,9 +36,9 @@ esp_err_t m5display_init();
 
 /**
  * @brief   Set display backlight level
- * 
+ *
  * @param   backlight_level Backlight level from 0 (lowest) to 7 (brightest)
- * 
+ *
  * @return  ESP_OK success
  *          ESP_FAIL failed
  */
