@@ -147,7 +147,7 @@ esp_err_t m5display_timeout(uint32_t timeout)
     }
 
     // Activate timer
-    m5display_timer = xTimerCreate("m5display_timer", timeout / portTICK_PERIOD_MS, pdFALSE, (void *) 0, m5display_sleep);
+    m5display_timer = xTimerCreate("m5display_timer", timeout * 1000 / portTICK_PERIOD_MS, pdFALSE, (void *) 0, m5display_sleep);
     if(m5display_timer != NULL) {
         ESP_LOGD(TAG, "[ OK ] Display timeout timer created");
     } else {

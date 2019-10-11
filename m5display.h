@@ -67,6 +67,7 @@ esp_err_t m5display_on();
  *
  *          Display turns back on with button events or m5display_wakeup() function call.
  *
+ * @param   timeout timeout in seconds
  * @return  ESP_OK success
  *          ESP_FAIL failed
  */
