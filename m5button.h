@@ -20,7 +20,7 @@ extern "C" {
 #include "freertos/task.h"
 #include "freertos/event_groups.h"
 
-#include "m5stickc.h"
+#include "m5event.h"
 
 #define M5BUTTON_BUTTON_A_GPIO      GPIO_NUM_37
 #define M5BUTTON_BUTTON_B_GPIO      GPIO_NUM_39

@@ -18,6 +18,8 @@ extern "C" {
 #include "util/tftspi.h"
 #include "util/tft.h"
 #include "m5power.h"
+#include "m5event.h"
+#include "m5button.h"
 
 #define M5DISPLAY_TYPE DISP_TYPE_ST7735S  /*!< Display type for display driver */
 #define M5DISPLAY_WIDTH 160               /*!< Display width in pixels after rotation */
@@ -44,9 +46,46 @@ esp_err_t m5display_init();
  */
 esp_err_t m5display_set_backlight_level(uint8_t backlight_level);
 
+/**
+ * @brief   Turn display off
+ *
+ * @return  ESP_OK success
+ *          ESP_FAIL failed
+ */
 esp_err_t m5display_off();
 
+/**
+ * @brief   Turn display on
+ *
+ * @return  ESP_OK success
+ *          ESP_FAIL failed
+ */
 esp_err_t m5display_on();
+
+/**
+ * @brief   Sets a timeout to turn display off
+ *
+ *          Display turns back on with button events or m5display_wakeup() function call.
+ *
+ * @return  ESP_OK success
+ *          ESP_FAIL failed
+ */
+esp_err_t m5display_timeout(uint32_t timeout);
+
+/**
+ * @brief   Turns display on and resets timeout timer
+ */
+void m5display_wakeup();
+
+/**
+ * @brief   Callback for timeout to turn display off
+ */
+void m5display_sleep();
+
+/**
+ * @brief   Event handler for display. Not meant to be used by user program.
+ */
+void m5display_event_handler(void * handler_arg, esp_event_base_t base, int32_t id, void * event_data);
 
 #ifdef __cplusplus
 }

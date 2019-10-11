@@ -10,6 +10,7 @@
 static const char * TAG = "m5display";
 
 spi_lobo_device_handle_t m5display_spi;
+TimerHandle_t m5display_timer;
 
 esp_err_t m5display_init() {
     esp_err_t e;
@@ -123,4 +124,64 @@ esp_err_t m5display_on()
     }
 
     return ESP_OK;
+}
+
+esp_err_t m5display_timeout(uint32_t timeout)
+{
+    esp_err_t e;
+
+    e = esp_event_handler_register_with(m5_event_loop, M5BUTTON_A_EVENT_BASE, ESP_EVENT_ANY_ID, m5display_event_handler, NULL);
+    if(e == ESP_OK) {
+        ESP_LOGD(TAG, "[ OK ] Registered for event BUTTON_A_CLICK");
+    } else {
+        ESP_LOGE(TAG, "[FAIL] Error registering for event BUTTON_A_CLICK");
+        return ESP_FAIL;
+    }
+
+    e = esp_event_handler_register_with(m5_event_loop, M5BUTTON_B_EVENT_BASE, ESP_EVENT_ANY_ID, m5display_event_handler, NULL);
+    if(e == ESP_OK) {
+        ESP_LOGD(TAG, "[ OK ] Registered for event BUTTON_B_CLICK");
+    } else {
+        ESP_LOGE(TAG, "[FAIL] Error registering for event BUTTON_B_CLICK");
+        return ESP_FAIL;
+    }
+
+    // Activate timer
+    m5display_timer = xTimerCreate("m5display_timer", timeout / portTICK_PERIOD_MS, pdFALSE, (void *) 0, m5display_sleep);
+    if(m5display_timer != NULL) {
+        ESP_LOGD(TAG, "[ OK ] Display timeout timer created");
+    } else {
+        ESP_LOGE(TAG, "[FAIL] Error creating display timeout timer");
+        return ESP_FAIL;
+    }
+
+    if(xTimerStart(m5display_timer, 0) == pdTRUE) {
+        ESP_LOGD(TAG, "[ OK ] Display timeout timer started");
+        return ESP_OK;
+    } else {
+        ESP_LOGE(TAG, "[FAIL] Error starting display timeout timer");
+        return ESP_FAIL;
+    }
+}
+
+void m5display_wakeup()
+{
+    m5display_on();
+    if(xTimerReset(m5display_timer, 0) == pdTRUE) {
+        ESP_LOGD(TAG, "[ OK ] Display timeout timer reset");
+    } else {
+        ESP_LOGE(TAG, "[FAIL] Error resetting display timeout timer");
+    }
+}
+
+void m5display_sleep()
+{
+    m5display_off();
+}
+
+void m5display_event_handler(void * handler_arg, esp_event_base_t base, int32_t id, void * event_data)
+{
+    if(base == M5BUTTON_A_EVENT_BASE || base == M5BUTTON_B_EVENT_BASE) {
+        m5display_wakeup();
+    }
 }

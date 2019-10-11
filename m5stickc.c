@@ -15,21 +15,7 @@ esp_err_t m5_init(m5stickc_config_t * config) {
     esp_err_t e;
     uint8_t error_count = 0;
 
-    esp_event_loop_args_t loop_args = {
-        .queue_size = 5,
-        .task_name = "m5_event_loop",
-        .task_priority = 10,
-        .task_stack_size = 2048,
-        .task_core_id = 0
-    };
-
-    e = esp_event_loop_create(&loop_args, &m5_event_loop);
-    if(e == ESP_OK) {
-        ESP_LOGD(TAG, "Event loop created");
-    } else {
-        ESP_LOGE(TAG, "Error creating event loop: %s", esp_err_to_name(e));
-        ++error_count;
-    }
+    m5event_init();
 
     // Init I²C
     i2c_config_t conf;

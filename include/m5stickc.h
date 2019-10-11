@@ -21,8 +21,7 @@ extern "C" {
 #include "m5power.h"
 #include "m5button.h"
 #include "m5display.h"
-
-extern esp_event_loop_handle_t m5_event_loop;   /*!< Event loop for M5 device-specific events */
+#include "m5event.h"
 
 typedef struct {
     m5power_config_t power;
