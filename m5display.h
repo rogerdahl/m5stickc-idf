@@ -18,8 +18,8 @@ extern "C" {
 #include "util/tftspi.h"
 #include "util/tft.h"
 #include "m5power.h"
-#include "m5event.h"
 #include "m5button.h"
+#include "m5event.h"
 
 #define M5DISPLAY_TYPE DISP_TYPE_ST7735S  /*!< Display type for display driver */
 #define M5DISPLAY_WIDTH 160               /*!< Display width in pixels after rotation */
