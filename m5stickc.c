@@ -47,6 +47,15 @@ esp_err_t m5_init(m5stickc_config_t * config) {
         ++error_count;
     }
 
+    // Init led
+    e = m5led_init();
+    if(e == ESP_OK) {
+        ESP_LOGD(TAG, "Led initialized");
+    } else {
+        ESP_LOGE(TAG, "Error initializing led");
+        ++error_count;
+    }
+
     // Init button
     e = m5button_init();
     if(e == ESP_OK) {

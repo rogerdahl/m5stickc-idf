@@ -90,6 +90,34 @@ esp_err_t m5power_register_set_bits(uint8_t register_address, uint8_t bits_to_se
  */
 esp_err_t m5power_register_clear_bits(uint8_t register_address, uint8_t bits_to_clear);
 
+/**
+ * @brief   Get VBat in V.
+ *
+ * @param   vbat The content of the vbat read gets stored in this variable
+ *
+ * @return  ESP_OK success
+ *          ESP_FAIL failed
+ */
+esp_err_t m5power_get_vbat(uint16_t *vbat);
+
+/**
+ * @brief   Get VAps in V.
+ *
+ * @param   vaps The content of the vaps read gets stored in this variable
+ *
+ * @return  ESP_OK success
+ *          ESP_FAIL failed
+ */
+esp_err_t m5power_get_vaps(uint16_t *vbat);
+
+/**
+ * @brief   Set Sleep.
+ *
+ * @return  ESP_OK success
+ *          ESP_FAIL failed
+ */
+esp_err_t m5power_set_sleep(void);
+
 #ifdef __cplusplus
 }
 #endif

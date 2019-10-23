@@ -315,3 +315,78 @@ esp_err_t m5power_register_clear_bits(uint8_t register_address, uint8_t bits_to_
 
     return ESP_OK;
 }
+
+esp_err_t m5power_get_vbat(uint16_t *vbat)
+{
+    esp_err_t e;
+    *vbat = 0;
+    uint8_t read1, read2;
+
+    e = m5power_register_read(0x78, &read1); // battery voltage LSB buff
+    if (e != ESP_OK)
+    {
+        return ESP_FAIL;
+    }
+    e = m5power_register_read(0x79, &read2); // battery voltage MSB buff
+    if (e != ESP_OK)
+    {
+        return ESP_FAIL;
+    }
+
+    *vbat = ((read1 << 4) + read2); // V
+
+    ESP_LOGD(TAG, "VBat: %u", *vbat);
+
+    return ESP_OK;
+}
+
+esp_err_t m5power_get_vaps(uint16_t *vaps)
+{
+    esp_err_t e;
+    *vaps = 0;
+    uint8_t read1, read2;
+
+    e = m5power_register_read(0x7E, &read1); // APS voltage LSB buff
+    if (e != ESP_OK)
+    {
+        return ESP_FAIL;
+    }
+    e = m5power_register_read(0x7F, &read2); // APS voltage MSB buff
+    if (e != ESP_OK)
+    {
+        return ESP_FAIL;
+    }
+
+    *vaps = ((read1 << 4) + read2); // V
+
+    ESP_LOGD(TAG, "VAPS: %u", *vaps);
+
+    return ESP_OK;
+}
+
+esp_err_t m5power_set_sleep(void)
+{
+    esp_err_t e;
+    uint8_t read1;
+
+    e = m5power_register_read(VOFF_SHUTDOWN_VOLTAGE_SETTING_REG, &read1); // VOFF_SHUTDOWN_VOLTAGE_SETTING_REG
+    if (e != ESP_OK)
+    {
+        return ESP_FAIL;
+    }
+
+    read1 = (1 << 3) | read1;
+    e = m5power_register_write(VOFF_SHUTDOWN_VOLTAGE_SETTING_REG, read1); // VOFF_SHUTDOWN_VOLTAGE_SETTING_REG
+    if (e != ESP_OK)
+    {
+        return ESP_FAIL;
+    }
+
+    e = m5power_register_write(DCDC1_DCDC3_LDO2_LDO3_SWITCH_CONTROL_REG, 0x01); // DCDC1_DCDC3_LDO2_LDO3_SWITCH_CONTROL_REG
+    if (e != ESP_OK)
+    {
+        return ESP_FAIL;
+    }
+
+    return ESP_OK;
+}
