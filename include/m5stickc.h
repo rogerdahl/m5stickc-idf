@@ -22,6 +22,7 @@ extern "C" {
 #include "m5button.h"
 #include "m5display.h"
 #include "m5event.h"
+#include "m5led.h"
 
 typedef struct {
     m5power_config_t power;
