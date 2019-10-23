@@ -25,6 +25,15 @@ extern "C" {
 #define M5DISPLAY_WIDTH 160               /*!< Display width in pixels after rotation */
 #define M5DISPLAY_HEIGHT 80               /*!< Display height in pixels after rotation */
 
+// Defines for global variables of the TFT Library
+#define TFT_ORIENTATION orientation
+#define TFT_FONT_ROTATE font_rotate
+#define TFT_TEXT_WRAP text_wrap
+#define TFT_FONT_TRANSPARENT font_transparent
+#define TFT_FONT_FORCEFIXED font_forceFixed
+#define TFT_GRAY_SCALE gray_scale
+#define TFT_FONT_BACKGROUND _bg
+#define TFT_FONT_FOREGROUND _fg
 
 extern spi_lobo_device_handle_t m5display_spi;    /*!< SPI device handle */
 
