@@ -25,7 +25,7 @@ esp_err_t m5_init(m5stickc_config_t * config) {
     conf.sda_pullup_en = GPIO_PULLUP_DISABLE;
     conf.scl_pullup_en = GPIO_PULLUP_DISABLE;
     conf.master.clk_speed = 100000;
-    ESP_LOGI(TAG, "Setting up I2C");
+    ESP_LOGD(TAG, "Setting up I2C");
     e = i2c_param_config(I2C_NUM_0, &conf);
     if(e == ESP_OK) {
         e = i2c_driver_install(I2C_NUM_0, I2C_MODE_MASTER, 0, 0, 0);
