@@ -42,7 +42,6 @@ bool m5led_is_on(void);
  * @param   state led state to set
  * @return  ESP_OK success
  *          ESP_FAIL failed
- *          ESP_ERR_INVALID_ARG led null or state is invalid
  */
 esp_err_t m5led_set(bool state);
 
@@ -51,7 +50,6 @@ esp_err_t m5led_set(bool state);
  *
  * @return  ESP_OK success
  *          ESP_FAIL failed
- *          ESP_ERR_INVALID_ARG led null or state is invalid
  */
 esp_err_t m5led_toggle(void);
 
