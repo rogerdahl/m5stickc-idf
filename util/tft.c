@@ -15,7 +15,7 @@
 #include "tft.h"
 #include "time.h"
 #include <math.h>
-#include "rom/tjpgd.h"
+#include "esp32/rom/tjpgd.h"
 #include "esp_heap_caps.h"
 #include "tftspi.h"
 
