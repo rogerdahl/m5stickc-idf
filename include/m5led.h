@@ -13,6 +13,7 @@ extern "C" {
 #endif
 #include "esp_system.h"
 #include "esp_log.h"
+#include "driver/gpio.h"
 
 #define M5LED_ON 0
 #define M5LED_OFF 1

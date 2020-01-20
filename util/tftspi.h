@@ -11,6 +11,7 @@
 #include "spi_master_lobo.h"
 #include "sdkconfig.h"
 #include "stmpe610.h"
+#include "driver/gpio.h"
 
 #ifdef __cplusplus
 extern "C" {
